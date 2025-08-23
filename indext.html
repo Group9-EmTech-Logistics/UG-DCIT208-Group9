@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmTech Logistic - Next Gen Supply Chain Management</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Background Video */
+        .background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            opacity: 0.6;
+        }
+
+        /* Video overlay for better contrast */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(12, 12, 30, 0.6));
+            z-index: -1;
+        }
+     
+     
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --dark-gradient: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --text-primary: #ffffff;
+            --text-secondary: #b8bcc8;
+            --text-accent: #64ffda;
+            --shadow-glow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --shadow-intense: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            --border-radius: 20px;
+            --login-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --login-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-gradient);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Modern Login Screen */
+        .login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        .login-container.hide {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(1.1);
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: slideInUp 0.8s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .profile {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .login-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            color: #999;
+            font-size: 1.1rem;
+            z-index: 2;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: #f8f9ff;
+            border: 2px solid #e8ecf4;
+            border-radius: 15px;
+            color: #333;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #999;
+        }
+
+        .form-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #667eea;
+        }
+
+        .forgot-password {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #5a6fd8;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--login-primary);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-info {
+            display: none;
+        }
+
+        /* Main Application */
+        .main-app {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .main-app.show {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Ultra Modern Header */
+        .ultra-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(12, 12, 12, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-gradient);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            animation: rotateY 4s infinite;
+        }
+
+        @keyframes rotateY {
+            0%, 100% { transform: rotateY(0); }
+            50% { transform: rotateY(180deg); }
+        }
+
+        .brand-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #64ffda, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-text p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Navigation */
+        .nav-menu {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item:hover {
+            background: var(--primary-gradient);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-item.active {
+            background: var(--primary-gradient);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+        }
+
+        /* User Profile */
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .ai-chat-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--success-gradient);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-chat-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(67, 233, 123, 0.4);
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background: var(--secondary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(240, 147, 251, 0.5);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-top: 100px;
+            padding: 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tab-content {
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-glow);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(31, 38, 135, 0.5);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-intense);
+        }
+
+        .metric-value {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #64ffda, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* AI Insights Spinner */
+        .ai-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(100, 255, 218, 0.3);
+            border-top: 2px solid #64ffda;
+            border-radius: 50%;
+            animation: aiSpin 1.5s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes aiSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Tracking Map */
+        .tracking-container {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem 0;
+            border: 1px solid var(--glass-border);
+        }
+
+        .tracking-map {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="%23667eea" stroke-width="0.5" opacity="0.2"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+        }
+
+        .tracking-path {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            right: 5%;
+            height: 4px;
+            background: linear-gradient(90deg, #43e97b 0%, #667eea 50%, #f093fb 100%);
+            border-radius: 2px;
+            transform: translateY(-50%);
+            box-shadow: 0 0 20px rgba(67, 233, 123, 0.5);
+        }
+
+        .tracking-point {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            top: 50%;
+            transform: translateY(-50%);
+            animation: pulse 2s infinite;
+        }
+
+        .tracking-point.origin {
+            left: 5%;
+            background: #43e97b;
+        }
+
+        .tracking-point.current {
+            left: 60%;
+            background: #667eea;
+            animation: pulse 1s infinite, move 3s ease-in-out infinite;
+        }
+
+        .tracking-point.destination {
+            right: 5%;
+            background: #f093fb;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 233, 123, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(67, 233, 123, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(67, 233, 123, 0); }
+        }
+
+        @keyframes move {
+            0%, 100% { transform: translateY(-50%) translateX(-5px); }
+            50% { transform: translateY(-50%) translateX(5px); }
+        }
+
+        .tracking-info {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            color: white;
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid #00f2fe;
+        }
+
+        .notification.error {
+            border-left: 4px solid #fee140;
+        }
+
+        /* Data Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: transparent;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1.5rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .data-table th {
+            background: rgba(102, 126, 234, 0.1);
+            font-weight: 600;
+            color: var(--text-accent);
+        }
+
+        .data-table tr {
+            transition: all 0.3s ease;
+        }
+
+        .data-table tr:hover {
+            background: rgba(100, 255, 218, 0.05);
+            transform: scale(1.01);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-low, .status-out-of-stock {
+            background: #ff0000;
+            color: white;
+        }
+
+        .status-normal {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+        .status-warning, .status-expiring-soon {
+            background: #ffcccb;
+            color: #8b0000;
+        }
+
+        /* Modern Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-gradient);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger-gradient);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Password visibility toggle */
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            color: #999;
+            cursor: pointer;
+            font-size: 1.1rem;
+            z-index: 2;
+            transition: all 0.3s ease;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        .password-toggle:hover {
+            color: #43e97b;
+            background: rgba(67, 233, 123, 0.1);
+            transform: scale(1.1);
+        }
+
+        .login-btn.loading {
+            opacity: 0.8;
+            cursor: not-allowed;
+        }
+
+        .login-btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .company-name {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Real-time Features */
+        .real-time-indicator {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .real-time-dot {
+            width: 8px;
+            height: 8px;
+            background: #43e97b;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* Enhanced Analytics */
+        .analytics-widget {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analytics-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #43e97b, #64ffda, #667eea);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .login-card {
+                margin: 1rem;
+                padding: 2rem;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Video -->
+    <video class="background-video" autoplay muted loop>
+        <source src="videos/vb1.mp4" type="video/mp4">
+        <!-- Fallback content -->
+    </video>
+
+        <!-- Video Overlay for Better Contrast -->
+    <div class="video-overlay"></div>
+    
+    <!-- Modern Login Screen -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-card">
+            <div class="login-header">
+                <h1 class="company-name">EMTECH LOGISTICS</h1>
+                <div class="profile">
+                    <img src="images/Crest.png" alt="Profile" class="profile-img">
+                </div>
+                <h2 class="login-title">Member Login</h2>
+                <p class="login-subtitle">Welcome back! Please login to your account</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="username" class="form-input" placeholder="Username" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" id="password" class="form-input" placeholder="Password" required>
+                        <span class="password-toggle" id="passwordToggle">👁️</span>
+                    </div>
+                </div>
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password" id="forgotPassword">Forgot Password?</a>
+                </div>
+                <button type="submit" class="login-btn" id="loginBtn">
+                    Access System
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div class="main-app" id="mainApp">
+        <!-- Ultra Modern Header -->
+        <header class="ultra-header">
+            <div class="header-content">
+                <div class="brand-logo">
+                    <div class="brand-icon">
+                       <img src="images/Crest.png" alt="Profile" class="profile-img">
+                    </div>
+                    <div class="brand-text">
+                        <h1>EmTech Logistic</h1>
+                        <p>Advanced Supply Chain Intelligence</p>
+                    </div>
+                </div>
+
+                <nav class="nav-menu">
+                    <div class="nav-item active" onclick="switchTab('dashboard')">🏠 Dashboard</div>
+                    <div class="nav-item" onclick="switchTab('inventory')">📦 Inventory</div>
+                    <div class="nav-item" onclick="switchTab('sales')">💰 Sales</div>
+                    <div class="nav-item" onclick="switchTab('customers')">👥 Customers</div>
+                    <div class="nav-item" onclick="switchTab('tracking')">🚚 Tracking</div>
+                    <div class="nav-item" onclick="switchTab('analytics')">📊 Analytics</div>
+                </nav>
+
+                <div class="user-section">
+                    <button class="ai-chat-btn">🤖 AI Assistant</button>
+                    <div class="user-avatar" onclick="logout()" id="userAvatar">DU</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <div class="glass-card">
+                    <h2 style="color: var(--text-accent); margin-bottom: 1.5rem; font-size: 1.8rem;">
+                        <span class="real-time-indicator">
+                            <span class="ai-spinner"></span>
+                            🤖 AI-Powered Business Intelligence
+                            <span class="real-time-dot"></span>
+                        </span>
+                    </h2>
+                    <div id="aiInsights">
+                        <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border-left: 4px solid #64ffda; background: rgba(100, 255, 218, 0.05); border-radius: 10px; margin-bottom: 1rem;">
+                            <span style="font-size: 1.5rem;">💡</span>
+                            <div>
+                                <strong style="color: #64ffda;">Smart Recommendation:</strong> Electronics inventory is below optimal levels. AI suggests reordering Samsung Galaxy S24 units within 48 hours.
+                                <div class="real-time-indicator" style="margin-top: 0.5rem; font-size: 0.8rem; color: #b8bcc8;">
+                                    <span class="real-time-dot"></span> Updated 2 minutes ago
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border-left: 4px solid #f093fb; background: rgba(240, 147, 251, 0.05); border-radius: 10px; margin-bottom: 1rem;">
+                            <span style="font-size: 1.5rem;">📈</span>
+                            <div>
+                                <strong style="color: #f093fb;">Market Trend Alert:</strong> 18% increase in food product demand detected. Supply chain optimization recommended.
+                                <div class="real-time-indicator" style="margin-top: 0.5rem; font-size: 0.8rem; color: #b8bcc8;">
+                                    <span class="real-time-dot"></span> Live monitoring active
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border-left: 4px solid #43e97b; background: rgba(67, 233, 123, 0.05); border-radius: 10px;">
+                            <span style="font-size: 1.5rem;">🎯</span>
+                            <div>
+                                <strong style="color: #43e97b;">Customer Insight:</strong> VIP customers prefer bulk deliveries on Mondays. Schedule optimization available.
+                                <div class="real-time-indicator" style="margin-top: 0.5rem; font-size: 0.8rem; color: #b8bcc8;">
+                                    <span class="real-time-dot"></span> AI analyzing patterns
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">1,247</div>
+                        <div class="metric-label">Total Inventory Items</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">₵125,340</div>
+                        <div class="metric-label">Monthly Revenue</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">198</div>
+                        <div class="metric-label">Active Customers</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">15</div>
+                        <div class="metric-label">Low Stock Alerts</div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3 style="color: var(--text-accent); margin-bottom: 2rem;">Quick Actions</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <button class="btn btn-primary" onclick="switchTab('inventory')">
+                            📦 Manage Inventory
+                        </button>
+                        <button class="btn btn-success" onclick="switchTab('tracking')">
+                            🚚 Track Shipments
+                        </button>
+                        <button class="btn btn-warning" onclick="showNotification('Report generated successfully!', 'success')">
+                            📊 Generate Report
+                        </button>
+                        <button class="btn btn-primary" onclick="switchTab('customers')">
+                            👥 Customer Center
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Tab -->
+            <div id="inventory" class="tab-content">
+                <div class="glass-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="color: var(--text-accent); font-size: 1.8rem;">Inventory Management</h2>
+                        <button class="btn btn-primary" onclick="addNewProduct()">
+                            ➕ Add New Item
+                        </button>
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <input type="text" id="inventorySearch" class="form-input" placeholder="🔍 Search inventory by name, SKU, or category..." style="max-width: 400px;">
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>SKU</th>
+                                    <th>Category</th>
+                                    <th>Quantity</th>
+                                    <th>Status</th>
+                                    <th>Origin</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTableBody">
+                                <tr>
+                                    <td>Samsung Galaxy S24 Ultra</td>
+                                    <td>SGS24U-001</td>
+                                    <td>Electronics</td>
+                                    <td>15</td>
+                                    <td><span class="status-badge status-low">Low Stock</span></td>
+                                    <td>South Korea</td>
+                                    <td><button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">🔍 Info</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Premium Jasmine Rice - 50kg</td>
+                                    <td>PJR50-002</td>
+                                    <td>Food</td>
+                                    <td>85</td>
+                                    <td><span class="status-badge status-normal">Normal</span></td>
+                                    <td>Thailand</td>
+                                    <td><button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">🔍 Info</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Golden Harvest Cooking Oil - 5L</td>
+                                    <td>GHCO5-003</td>
+                                    <td>Food</td>
+                                    <td>32</td>
+                                    <td><span class="status-badge status-expiring-soon">Expiring Soon</span></td>
+                                    <td>Malaysia</td>
+                                    <td><button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">🔍 Info</button></td>
+                                </tr>
+                                <tr>
+                                    <td>iPhone 15 Pro Max</td>
+                                    <td>IPH15PM-004</td>
+                                    <td>Electronics</td>
+                                    <td>8</td>
+                                    <td><span class="status-badge status-low">Low Stock</span></td>
+                                    <td>China</td>
+                                    <td><button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">🔍 Info</button></td>
+                                </tr>
+                                <tr>
+                                    <td>MacBook Pro M3 - 16"</td>
+                                    <td>MBP16M3-005</td>
+                                    <td>Electronics</td>
+                                    <td>0</td>
+                                    <td><span class="status-badge status-out-of-stock">Out of Stock</span></td>
+                                    <td>China</td>
+                                    <td><button class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.8rem;">⚠️ Restock</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales Tab -->
+            <div id="sales" class="tab-content">
+                <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 2rem;">
+                    <div class="metric-card">
+                        <div class="metric-value">₵18,450</div>
+                        <div class="metric-label">Today's Sales</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">67</div>
+                        <div class="metric-label">Transactions</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">₵5,200</div>
+                        <div class="metric-label">Today's Profit</div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="color: var(--text-accent); font-size: 1.8rem;">Sales Transactions</h2>
+                        <button class="btn btn-success" onclick="showNotification('New sale feature coming soon!', 'success')">
+                            💰 New Sale
+                        </button>
+                    </div>
+                    
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Customer ID</th>
+                                    <th>Customer</th>
+                                    <th>Items</th>
+                                    <th>Total</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#TXN-001</td>
+                                    <td>CU-2024-001</td>
+                                    <td>Kwame Electronics Enterprise</td>
+                                    <td>Samsung Galaxy S24 Ultra x2</td>
+                                    <td>₵6,400</td>
+                                    <td>Wholesale</td>
+                                    <td>2025-08-10</td>
+                                    <td><button class="btn btn-success" style="padding: 0.5rem 1rem; font-size: 0.8rem;">🧾 Receipt</button></td>
+                                </tr>
+                                <tr>
+                                    <td>#TXN-002</td>
+                                    <td>CU-2024-002</td>
+                                    <td>Abena Grocery & Supermarket</td>
+                                    <td>Premium Jasmine Rice 50kg x5</td>
+                                    <td>₵1,100</td>
+                                    <td>Wholesale</td>
+                                    <td>2025-08-10</td>
+                                    <td><button class="btn btn-success" style="padding: 0.5rem 1rem; font-size: 0.8rem;">🧾 Receipt</button></td>
+                                </tr>
+                                <tr>
+                                    <td>#TXN-003</td>
+                                    <td>CU-2024-003</td>
+                                    <td>TechHub Ghana Limited</td>
+                                    <td>iPhone 15 Pro Max x1</td>
+                                    <td>₵5,200</td>
+                                    <td>Wholesale</td>
+                                    <td>2025-08-08</td>
+                                    <td><button class="btn btn-success" style="padding: 0.5rem 1rem; font-size: 0.8rem;">🧾 Receipt</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customers Tab -->
+            <div id="customers" class="tab-content">
+                <div class="glass-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="color: var(--text-accent); font-size: 1.8rem;">Customer Management</h2>
+                        <button class="btn btn-primary" onclick="showNotification('Add customer feature coming soon!', 'success')">
+                            👤 Add Customer
+                        </button>
+                    </div>
+                    
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer ID</th>
+                                    <th>Customer Name</th>
+                                    <th>Business Type</th>
+                                    <th>Phone</th>
+                                    <th>Total Orders</th>
+                                    <th>Last Order</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>CU-2024-001</td>
+                                    <td>Kwame Electronics Enterprise</td>
+                                    <td>Wholesale</td>
+                                    <td>+233 20 123 4567</td>
+                                    <td>25</td>
+                                    <td>2025-08-10</td>
+                                    <td><button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">👁️ View</button></td>
+                                </tr>
+                                <tr>
+                                    <td>CU-2024-002</td>
+                                    <td>Abena Grocery & Supermarket</td>
+                                    <td>Retail</td>
+                                    <td>+233 24 567 8901</td>
+                                    <td>42</td>
+                                    <td>2025-08-09</td>
+                                    <td><button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">👁️ View</button></td>
+                                </tr>
+                                <tr>
+                                    <td>CU-2024-003</td>
+                                    <td>TechHub Ghana Limited</td>
+                                    <td>Wholesale</td>
+                                    <td>+233 50 111 2233</td>
+                                    <td>18</td>
+                                    <td>2025-08-08</td>
+                                    <td><button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">👁️ View</button></td>
+                                </tr>
+                                <tr>
+                                    <td>CU-2024-004</td>
+                                    <td>Nana Yaa Trading Company</td>
+                                    <td>Wholesale</td>
+                                    <td>+233 26 888 9999</td>
+                                    <td>32</td>
+                                    <td>2025-08-07</td>
+                                    <td><button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">👁️ View</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tracking Tab -->
+            <div id="tracking" class="tab-content">
+                <div class="glass-card">
+                    <h2 style="color: var(--text-accent); margin-bottom: 1.5rem; font-size: 1.8rem;">🚚 International Shipment Tracking</h2>
+                    
+                    <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-bottom: 2rem;">
+                        <div class="metric-card">
+                            <div class="metric-value">23</div>
+                            <div class="metric-label">Active Shipments</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">8</div>
+                            <div class="metric-label">In Transit</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">12</div>
+                            <div class="metric-label">Delivered Today</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">3</div>
+                            <div class="metric-label">Pending Customs</div>
+                        </div>
+                    </div>
+
+                    <!-- Live Tracking Map -->
+                    <div class="tracking-container">
+                        <div class="tracking-map">
+                            <div class="tracking-path"></div>
+                            <div class="tracking-point origin" title="Shenzhen, China - Origin"></div>
+                            <div class="tracking-point current" title="Port of Tema, Ghana - Current Location"></div>
+                            <div class="tracking-point destination" title="Accra Warehouse - Destination"></div>
+                        </div>
+                        <div class="tracking-info">
+                            📦 Shipment #SH-2025-089 | ETA: Aug 24, 2025 14:30 GMT
+                        </div>
+                    </div>
+
+                    <!-- Shipment Details -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2rem 0;">
+                        <div class="analytics-widget">
+                            <h3 style="color: #43e97b; margin-bottom: 1rem;">🌍 Current Shipments</h3>
+                            <div style="space-y: 1rem;">
+                                <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                    <span>Electronics from China</span>
+                                    <span style="color: #43e97b;">✈️ In Transit</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                    <span>Rice from Thailand</span>
+                                    <span style="color: #f093fb;">🚢 At Port</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 0.75rem 0;">
+                                    <span>Auto Parts from Germany</span>
+                                    <span style="color: #667eea;">🚛 Out for Delivery</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-widget">
+                            <h3 style="color: #667eea; margin-bottom: 1rem;">⏰ Delivery Schedule</h3>
+                            <div>
+                                <div style="margin-bottom: 1rem;">
+                                    <div style="font-weight: 600; color: #64ffda;">Today - Aug 22, 2025</div>
+                                    <div style="color: #b8bcc8; font-size: 0.9rem; margin-top: 0.5rem;">
+                                        • Electronics shipment arriving at 14:30<br>
+                                        • Food products delivery at 16:45
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <div style="font-weight: 600; color: #f093fb;">Tomorrow - Aug 23, 2025</div>
+                                    <div style="color: #b8bcc8; font-size: 0.9rem; margin-top: 0.5rem;">
+                                        • Auto parts from Germany at 10:15<br>
+                                        • Medical supplies at 13:20
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tracking Table -->
+                    <div style="overflow-x: auto; margin-top: 2rem;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Tracking ID</th>
+                                    <th>Origin</th>
+                                    <th>Destination</th>
+                                    <th>Status</th>
+                                    <th>ETA</th>
+                                    <th>Progress</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#SH-2025-089</td>
+                                    <td>🇨🇳 Shenzhen, China</td>
+                                    <td>🇬🇭 Accra, Ghana</td>
+                                    <td><span class="status-badge status-warning">In Transit</span></td>
+                                    <td>Aug 24, 14:30</td>
+                                    <td>
+                                        <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 10px; height: 8px;">
+                                            <div style="width: 75%; background: linear-gradient(90deg, #43e97b, #667eea); height: 100%; border-radius: 10px;"></div>
+                                        </div>
+                                        <span style="font-size: 0.8rem; color: #b8bcc8;">75% Complete</span>
+                                    </td>
+                                    <td><button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">📍 Track</button></td>
+                                </tr>
+                                <tr>
+                                    <td>#SH-2025-087</td>
+                                    <td>🇹🇭 Bangkok, Thailand</td>
+                                    <td>🇬🇭 Tema, Ghana</td>
+                                    <td><span class="status-badge status-normal">At Port</span></td>
+                                    <td>Aug 23, 09:00</td>
+                                    <td>
+                                        <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 10px; height: 8px;">
+                                            <div style="width: 90%; background: linear-gradient(90deg, #43e97b, #667eea); height: 100%; border-radius: 10px;"></div>
+                                        </div>
+                                        <span style="font-size: 0.8rem; color: #b8bcc8;">90% Complete</span>
+                                    </td>
+                                    <td><button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">📍 Track</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics" class="tab-content">
+                <div class="glass-card">
+                    <h2 style="color: var(--text-accent); margin-bottom: 2rem; font-size: 1.8rem;">📊 Advanced Analytics & Business Intelligence</h2>
+                    
+                    <!-- AI-Powered Analytics Dashboard -->
+                    <div class="analytics-widget" style="margin-bottom: 2rem;">
+                        <h3 style="color: #64ffda; display: flex; align-items: center; gap: 1rem;">
+                            <span class="ai-spinner"></span>
+                            🤖 Real-Time AI Insights
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                            <div style="padding: 1rem; background: rgba(67, 233, 123, 0.1); border-radius: 10px; border: 1px solid rgba(67, 233, 123, 0.2);">
+                                <div style="color: #43e97b; font-weight: 600;">📈 Sales Prediction</div>
+                                <div style="color: #b8bcc8; font-size: 0.9rem; margin-top: 0.5rem;">
+                                    Next month revenue forecast: ₵189,450 (+23%)
+                                </div>
+                                <div class="real-time-indicator" style="margin-top: 0.5rem; font-size: 0.8rem;">
+                                    <span class="real-time-dot"></span> AI analyzing trends
+                                </div>
+                            </div>
+                            
+                            <div style="padding: 1rem; background: rgba(102, 126, 234, 0.1); border-radius: 10px; border: 1px solid rgba(102, 126, 234, 0.2);">
+                                <div style="color: #667eea; font-weight: 600;">🎯 Demand Forecasting</div>
+                                <div style="color: #b8bcc8; font-size: 0.9rem; margin-top: 0.5rem;">
+                                    Electronics demand will peak in 2 weeks
+                                </div>
+                                <div class="real-time-indicator" style="margin-top: 0.5rem; font-size: 0.8rem;">
+                                    <span class="real-time-dot"></span> Updated hourly
+                                </div>
+                            </div>
+                            
+                            <div style="padding: 1rem; background: rgba(240, 147, 251, 0.1); border-radius: 10px; border: 1px solid rgba(240, 147, 251, 0.2);">
+                                <div style="color: #f093fb; font-weight: 600;">⚠️ Risk Assessment</div>
+                                <div style="color: #b8bcc8; font-size: 0.9rem; margin-top: 0.5rem;">
+                                    Low risk detected. Supply chain stable.
+                                </div>
+                                <div class="real-time-indicator" style="margin-top: 0.5rem; font-size: 0.8rem;">
+                                    <span class="real-time-dot"></span> Monitoring 24/7
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                        <div class="analytics-widget">
+                            <h3 style="color: #64ffda;">📈 Sales Analytics</h3>
+                            <p style="color: var(--text-secondary); margin: 1rem 0;">AI-powered sales trend analysis and forecasting with predictive insights for optimal decision making.</p>
+                            <div style="margin: 1rem 0;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="color: #b8bcc8;">Net Profit:</span>
+                                    <span style="color: #43e97b;">₵38,420 (+15%)</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="color: #b8bcc8;">ROI:</span>
+                                    <span style="color: #64ffda;">28.5%</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="showNotification('Financial report generated!', 'success')">Generate Report</button>
+                        </div>
+
+                        <div class="analytics-widget">
+                            <h3 style="color: #667eea;">🌐 Market Intelligence</h3>
+                            <p style="color: var(--text-secondary); margin: 1rem 0;">Global market trends, competitor analysis, and strategic business recommendations.</p>
+                            <div style="margin: 1rem 0;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="color: #b8bcc8;">Market Growth:</span>
+                                    <span style="color: #43e97b;">+23.4% YoY</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="color: #b8bcc8;">Opportunities:</span>
+                                    <span style="color: #f093fb;">12 Identified</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-success" onclick="showNotification('Market analysis ready!', 'success')">View Insights</button>
+                        </div>
+
+                        <div class="analytics-widget">
+                            <h3 style="color: #fa709a;">🔍 Predictive Analytics</h3>
+                            <p style="color: var(--text-secondary); margin: 1rem 0;">Machine learning-powered predictions for inventory, demand, and customer behavior patterns.</p>
+                            <div style="margin: 1rem 0;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="color: #b8bcc8;">Accuracy:</span>
+                                    <span style="color: #43e97b;">96.8%</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="color: #b8bcc8;">Predictions:</span>
+                                    <span style="color: #64ffda;">847 Active</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-warning" onclick="showNotification('ML models processing data!', 'success')">Run Predictions</button>
+                        </div>
+
+                        <div class="analytics-widget">
+                            <h3 style="color: #38f9d7;">🎯 Customer Analytics</h3>
+                            <p style="color: var(--text-secondary); margin: 1rem 0;">Deep customer behavior analysis, segmentation, and personalized recommendation engine.</p>
+                            <div style="margin: 1rem 0;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="color: #b8bcc8;">Retention Rate:</span>
+                                    <span style="color: #43e97b;">92.3%</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="color: #b8bcc8;">Satisfaction:</span>
+                                    <span style="color: #43e97b;">4.8/5.0</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="showNotification('Customer insights generated!', 'success')">Analyze Customers</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Enhanced user credentials database
+        const validUsers = {
+            'admin@emtech.com': { password: 'EmTech2025!', role: 'admin', name: 'Administrator' },
+            'manager@emtech.com': { password: 'Manager123!', role: 'manager', name: 'Manager' },
+            'staff@emtech.com': { password: 'Staff123!', role: 'staff', name: 'Staff Member' },
+            'demo': { password: 'demo123', role: 'demo', name: 'Demo User' }
+        };
+
+        let currentUser = null;
+        let currentTab = 'dashboard';
+        let aiInsightTimer = null;
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Enhanced EmTech Logistics System initialized');
+            startAIInsightRotation();
+        });
+
+        // AI Insight Rotation System
+        function startAIInsightRotation() {
+            const insights = [
+                {
+                    icon: '💡',
+                    color: '#64ffda',
+                    title: 'Smart Recommendation',
+                    message: 'Electronics inventory is below optimal levels. AI suggests reordering Samsung Galaxy S24 units within 48 hours.',
+                    status: 'Updated 2 minutes ago'
+                },
+                {
+                    icon: '📈',
+                    color: '#f093fb',
+                    title: 'Market Trend Alert',
+                    message: '18% increase in food product demand detected. Supply chain optimization recommended.',
+                    status: 'Live monitoring active'
+                },
+                {
+                    icon: '🎯',
+                    color: '#43e97b',
+                    title: 'Customer Insight',
+                    message: 'VIP customers prefer bulk deliveries on Mondays. Schedule optimization available.',
+                    status: 'AI analyzing patterns'
+                },
+                {
+                    icon: '⚠️',
+                    color: '#fa709a',
+                    title: 'Risk Assessment',
+                    message: 'Weather conditions may affect shipments from Thailand. Consider route optimization.',
+                    status: 'Risk monitoring active'
+                },
+                {
+                    icon: '🚀',
+                    color: '#667eea',
+                    title: 'Efficiency Boost',
+                    message: 'AI identified 15% efficiency improvement opportunity in warehouse operations.',
+                    status: 'Optimization ready'
+                },
+                {
+                    icon: '💰',
+                    color: '#43e97b',
+                    title: 'Revenue Opportunity',
+                    message: 'Cross-selling electronics with accessories could increase revenue by 12%.',
+                    status: 'Revenue analysis complete'
+                }
+            ];
+
+            let currentIndex = 0;
+            
+            aiInsightTimer = setInterval(() => {
+                if (currentTab === 'dashboard') {
+                    const aiInsightsContainer = document.getElementById('aiInsights');
+                    if (aiInsightsContainer) {
+                        // Add fade out effect
+                        aiInsightsContainer.style.opacity = '0.3';
+                        
+                        setTimeout(() => {
+                            // Update with new insight
+                            const insight = insights[currentIndex];
+                            aiInsightsContainer.innerHTML = `
+                                <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border-left: 4px solid ${insight.color}; background: ${insight.color}0D; border-radius: 10px; margin-bottom: 1rem;">
+                                    <span style="font-size: 1.5rem;">${insight.icon}</span>
+                                    <div>
+                                        <strong style="color: ${insight.color};">${insight.title}:</strong> ${insight.message}
+                                        <div class="real-time-indicator" style="margin-top: 0.5rem; font-size: 0.8rem; color: #b8bcc8;">
+                                            <span class="real-time-dot"></span> ${insight.status}
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            // Fade back in
+                            aiInsightsContainer.style.opacity = '1';
+                            
+                            currentIndex = (currentIndex + 1) % insights.length;
+                        }, 300);
+                    }
+                }
+            }, 5000); // Rotate every 5 seconds
+        }
+
+        // Password visibility toggle
+        document.getElementById('passwordToggle').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const toggle = document.getElementById('passwordToggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggle.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                toggle.textContent = '👁️';
+            }
+        });
+
+        // Forgot password handler
+        document.getElementById('forgotPassword').addEventListener('click', function(e) {
+            e.preventDefault();
+            showPasswordResetModal();
+        });
+
+        function showPasswordResetModal() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(10px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: linear-gradient(145deg, #ffffff, #f8f9ff);
+                padding: 2.5rem;
+                border-radius: 20px;
+                max-width: 400px;
+                width: 90%;
+                text-align: center;
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+                animation: slideInScale 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            `;
+            
+            modalContent.innerHTML = `
+                <div style="font-size: 3rem; margin-bottom: 1rem; color: #f093fb;">🔐</div>
+                <h3 style="color: #333; margin-bottom: 1rem; font-size: 1.4rem;">Reset Password</h3>
+                <p style="color: #666; margin-bottom: 2rem; line-height: 1.5;">Enter your email address and we'll send you a link to reset your password.</p>
+                <input type="email" placeholder="Enter your email" style="
+                    width: 100%;
+                    padding: 1rem;
+                    border: 2px solid #e8ecf4;
+                    border-radius: 12px;
+                    font-size: 1rem;
+                    margin-bottom: 1.5rem;
+                    transition: all 0.3s ease;
+                ">
+                <div style="display: flex; gap: 1rem;">
+                    <button id="cancelReset" style="
+                        flex: 1;
+                        padding: 0.8rem;
+                        background: #f0f0f0;
+                        border: none;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        font-weight: 600;
+                        transition: all 0.3s ease;
+                    ">Cancel</button>
+                    <button id="sendReset" style="
+                        flex: 1;
+                        padding: 0.8rem;
+                        background: linear-gradient(135deg, #f093fb, #667eea);
+                        color: white;
+                        border: none;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        font-weight: 600;
+                        transition: all 0.3s ease;
+                    ">Send Reset Link</button>
+                </div>
+            `;
+            
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            
+            modal.querySelector('#cancelReset').onclick = () => document.body.removeChild(modal);
+            modal.querySelector('#sendReset').onclick = () => {
+                showNotification('Password reset link would be sent to your email!', 'success');
+                document.body.removeChild(modal);
+            };
+            modal.onclick = (e) => {
+                if (e.target === modal) document.body.removeChild(modal);
+            };
+        }
+
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (!username || !password) {
+                showNotification('Please enter both username and password', 'error');
+                return;
+            }
+            
+            const user = validUsers[username.toLowerCase()];
+            
+            if (!user || user.password !== password) {
+                showNotification('Invalid credentials. Please check your username and password.', 'error');
+                const loginCard = document.querySelector('.login-card');
+                loginCard.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    loginCard.style.animation = '';
+                }, 500);
+                return;
+            }
+            
+            loginBtn.textContent = 'Authenticating...';
+            loginBtn.classList.add('loading');
+            loginBtn.disabled = true;
+            
+            currentUser = user;
+            
+            setTimeout(() => {
+                document.getElementById('loginContainer').classList.add('hide');
+                setTimeout(() => {
+                    document.getElementById('mainApp').classList.add('show');
+                    showNotification(`Welcome back, ${user.name}!`, 'success');
+                    updateUserInterface();
+                }, 800);
+            }, 1500);
+        });
+
+        // Update user interface
+        function updateUserInterface() {
+            if (currentUser) {
+                const userAvatar = document.getElementById('userAvatar');
+                const initials = currentUser.name.split(' ').map(n => n[0]).join('');
+                userAvatar.textContent = initials;
+            }
+        }
+
+        // Tab switching with enhanced navigation
+        function switchTab(tabName) {
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show tab content with smooth transition
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            setTimeout(() => {
+                document.getElementById(tabName).classList.add('active');
+                currentTab = tabName;
+                
+                // Tab-specific initialization
+                if (tabName === 'tracking') {
+                    initializeTracking();
+                } else if (tabName === 'analytics') {
+                    initializeAnalytics();
+                }
+                
+                showNotification(`Switched to ${tabName} section`, 'success');
+            }, 150);
+        }
+
+        // Initialize tracking features
+        function initializeTracking() {
+            // Animate tracking points
+            const currentPoint = document.querySelector('.tracking-point.current');
+            if (currentPoint) {
+                // Add smooth movement animation
+                let position = 60;
+                const moveInterval = setInterval(() => {
+                    position += 0.1;
+                    if (position >= 95) {
+                        position = 60;
+                    }
+                    currentPoint.style.left = position + '%';
+                }, 100);
+                
+                // Clear interval when switching tabs
+                currentPoint.dataset.interval = moveInterval;
+            }
+        }
+
+        // Initialize analytics features
+        function initializeAnalytics() {
+            // Simulate real-time data updates
+            setTimeout(() => {
+                showNotification('Analytics data updated with latest insights', 'success');
+            }, 1000);
+        }
+
+        // Add new product function
+        function addNewProduct() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(10px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 2.5rem; border-radius: 20px; max-width: 500px; width: 90%; color: white;">
+                    <h3 style="color: #64ffda; margin-bottom: 2rem; text-align: center;">➕ Add New Product</h3>
+                    <div style="display: grid; gap: 1rem;">
+                        <input type="text" placeholder="Product Name" class="form-input" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                        <input type="text" placeholder="SKU" class="form-input" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                        <select class="form-input" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                            <option value="">Select Category</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="food">Food</option>
+                            <option value="automotive">Automotive</option>
+                            <option value="medical">Medical</option>
+                        </select>
+                        <input type="number" placeholder="Initial Quantity" class="form-input" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                        <input type="text" placeholder="Origin Country" class="form-input" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button onclick="document.body.removeChild(this.closest('.modal'))" class="btn" style="flex: 1; background: #6c757d; color: white;">Cancel</button>
+                        <button onclick="addProductToInventory(this.closest('div').previousElementSibling)" class="btn btn-success" style="flex: 1;">Add Product</button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('modal');
+            document.body.appendChild(modal);
+        }
+
+        // Add product to inventory
+        function addProductToInventory(formContainer) {
+            const inputs = formContainer.querySelectorAll('input, select');
+            const [name, sku, category, quantity, origin] = Array.from(inputs).map(input => input.value);
+            
+            if (!name || !sku || !category || !quantity || !origin) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+            
+            // Add to inventory table
+            const tbody = document.getElementById('inventoryTableBody');
+            const newRow = document.createElement('tr');
+            
+            // Determine status based on quantity
+            let status = 'status-normal';
+            let statusText = 'Normal';
+            if (quantity == 0) {
+                status = 'status-out-of-stock';
+                statusText = 'Out of Stock';
+            } else if (quantity < 20) {
+                status = 'status-low';
+                statusText = 'Low Stock';
+            }
+            
+            newRow.innerHTML = `
+                <td>${name}</td>
+                <td>${sku}</td>
+                <td>${category}</td>
+                <td>${quantity}</td>
+                <td><span class="status-badge ${status}">${statusText}</span></td>
+                <td>${origin}</td>
+                <td><button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">${quantity == 0 ? '⚠️ Restock' : '🔍 Info'}</button></td>
+            `;
+            
+            tbody.appendChild(newRow);
+            
+            // Close modal
+            document.body.removeChild(document.querySelector('.modal'));
+            showNotification('Product added successfully!', 'success');
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear AI insight timer
+                if (aiInsightTimer) {
+                    clearInterval(aiInsightTimer);
+                }
+                
+                document.getElementById('mainApp').classList.remove('show');
+                setTimeout(() => {
+                    document.getElementById('loginContainer').classList.remove('hide');
+                    document.getElementById('loginForm').reset();
+                    document.getElementById('loginBtn').textContent = 'Access System';
+                    document.getElementById('loginBtn').classList.remove('loading');
+                    document.getElementById('loginBtn').disabled = false;
+                    currentUser = null;
+                    currentTab = 'dashboard';
+                    showNotification('Logged out successfully', 'success');
+                }, 300);
+            }
+        }
+
+        // Enhanced notification system
+        function showNotification(message, type = 'success') {
+            const existing = document.querySelector('.notification');
+            if (existing) {
+                existing.remove();
+            }
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span style="font-size: 1.2rem;">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Enhanced interactivity
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn') && !e.target.onclick && !e.target.getAttribute('onclick')) {
+                const buttonText = e.target.textContent;
+                if (buttonText.includes('Track')) {
+                    showNotification('Tracking details opened in new window', 'success');
+                } else if (buttonText.includes('Receipt')) {
+                    showNotification('Receipt generated and downloaded', 'success');
+                } else if (buttonText.includes('View')) {
+                    showNotification('Customer profile opened', 'success');
+                } else {
+                    showNotification('Feature coming soon!', 'success');
+                }
+            }
+        });
+
+        // Enhanced input effects
+        document.addEventListener('focusin', function(e) {
+            if (e.target.classList.contains('form-input')) {
+                e.target.parentElement.style.transform = 'scale(1.02)';
+                e.target.style.boxShadow = '0 0 20px rgba(102, 126, 234, 0.3)';
+            }
+        });
+
+        document.addEventListener('focusout', function(e) {
+            if (e.target.classList.contains('form-input')) {
+                e.target.parentElement.style.transform = 'scale(1)';
+                e.target.style.boxShadow = '';
+            }
+        });
+
+        // Search functionality
+        document.getElementById('inventorySearch')?.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#inventoryTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                    row.style.animation = 'slideIn 0.3s ease';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        console.log('Enhanced EmTech Logistics System loaded successfully with advanced features');
+    </script>
+</body>
+</html>
