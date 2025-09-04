@@ -1,0 +1,128 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths: 
+      - 'backend/**'
+      - '.github/workflows/backend-ci-cd.yml'
+  pull_request:
+    branches: [ main ]
+    paths: 
+      - 'backend/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: test
+          POSTGRES_USER: test
+          POSTGRES_DB: emtech_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+    
+    - name: Cache Maven packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+    
+    - name: Run tests
+      working-directory: ./backend
+      run: mvn clean test
+      env:
+        DATABASE_URL: jdbc:postgresql://localhost:5432/emtech_test
+        DATABASE_USERNAME: test
+        DATABASE_PASSWORD: test
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+    
+    - name: Generate test report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Maven Tests
+        path: backend/target/surefire-reports/*.xml
+        reporter: java-junit
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./backend/target/site/jacoco/jacoco.xml
+
+  build-and-deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+    
+    - name: Build with Maven
+      working-directory: ./backend
+      run: mvn clean package -DskipTests
+    
+    - name: Build Docker image
+      run: |
+        docker build -t emtech-logistics:${{ github.sha }} ./backend
+        docker tag emtech-logistics:${{ github.sha }} emtech-logistics:latest
+    
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Push Docker image
+      run: |
+        docker tag emtech-logistics:latest ${{ secrets.DOCKER_USERNAME }}/emtech-logistics:latest
+        docker tag emtech-logistics:latest ${{ secrets.DOCKER_USERNAME }}/emtech-logistics:${{ github.sha }}
+        docker push ${{ secrets.DOCKER_USERNAME }}/emtech-logistics:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/emtech-logistics:${{ github.sha }}
+    
+    - name: Deploy to production
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          cd /opt/emtech-logistics
+          docker-compose pull backend
+          docker-compose up -d backend
+          docker image prune -f
